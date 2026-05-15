@@ -81,9 +81,28 @@ python scripts/benchmark.py
 ```
 
 ## 🏗️ Architecture
-```text
-Browser ──► Nginx ──► FastAPI Backend ──► MongoDB Atlas (Vector + Data)
-                  └──► Next.js Frontend       └── Redis (Cache/Rate-limit)
+
+```mermaid
+flowchart LR
+    Browser([Browser]) --> Nginx[Nginx Proxy]
+    Nginx --> Frontend[Next.js Frontend]
+    Nginx --> Backend[FastAPI Backend]
+    
+    Backend --> MongoDB[(MongoDB Atlas\nVector + Data)]
+    Backend --> Redis[(Redis\nCache/Rate-limit)]
+    Backend -.-> LLM[Google Gemini API]
+
+    classDef proxy fill:#f3f4f6,stroke:#374151,stroke-width:2px,color:#000;
+    classDef frontend fill:#000000,stroke:#333333,stroke-width:2px,color:#fff;
+    classDef backend fill:#059669,stroke:#047857,stroke-width:2px,color:#fff;
+    classDef db fill:#47A248,stroke:#166534,stroke-width:2px,color:#fff;
+    classDef external fill:#4285F4,stroke:#1e40af,stroke-width:2px,color:#fff;
+
+    class Nginx proxy;
+    class Frontend frontend;
+    class Backend backend;
+    class MongoDB,Redis db;
+    class LLM external;
 ```
 
 ## 📄 License
