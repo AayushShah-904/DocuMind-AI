@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --border: #e5e7eb;
+    --text: #111827;
+    --text-secondary: #6b7280;
+    --accent: #6366f1;
+  }
+
+  .dark {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --border: #262626;
+    --text: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --accent: #818cf8;
+  }
+
+  * {
+    @apply border-gray-200 dark:border-dark-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white dark:bg-dark-bg text-ink dark:text-ink-inverse;
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent/20 text-accent-dark;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-dark-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-zinc-600;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg
+           bg-accent text-white font-medium text-sm
+           hover:bg-accent-hover active:scale-[0.98]
+           transition-all duration-150 shadow-soft
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg
+           text-ink-secondary dark:text-ink-tertiary font-medium text-sm
+           hover:bg-surface-tertiary dark:hover:bg-dark-elevated
+           transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .input-base {
+    @apply w-full px-3 py-2 rounded-lg border border-surface-border dark:border-dark-border
+           bg-white dark:bg-dark-surface
+           text-ink dark:text-ink-inverse placeholder:text-ink-tertiary
+           focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent
+           transition-colors text-sm;
+  }
+
+  .card {
+    @apply bg-white dark:bg-dark-surface border border-surface-border dark:border-dark-border
+           rounded-xl shadow-soft;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium;
+  }
+
+  /* Streaming cursor blink */
+  .streaming-cursor::after {
+    content: "▋";
+    @apply animate-blink text-accent ml-0.5;
+  }
+}
