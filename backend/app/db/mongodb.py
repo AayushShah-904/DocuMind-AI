@@ -1,4 +1,3 @@
-
 import motor.motor_asyncio
 from beanie import init_beanie
 

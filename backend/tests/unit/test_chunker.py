@@ -1,6 +1,5 @@
 """Unit tests for the chunker utility."""
 
-
 from app.utils.chunker import chunk_text
 
 

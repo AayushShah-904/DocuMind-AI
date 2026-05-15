@@ -135,8 +135,8 @@ class RAGService:
         except Exception as e:
             logger.error("LLM streaming failed", error=str(e))
             yield (
-                f"data: {{\"type\": \"error\", \"content\": "
-                f"\"Generation failed: {str(e)[:100]}\"}}\n\n"
+                f'data: {{"type": "error", "content": '
+                f'"Generation failed: {str(e)[:100]}"}}\n\n'
             )
             return
 
