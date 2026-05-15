@@ -84,9 +84,7 @@ class ChatRepository:
         await msg.insert()
         return msg
 
-    async def get_messages(
-        self, session_id: str, limit: int = 20
-    ) -> List[Message]:
+    async def get_messages(self, session_id: str, limit: int = 20) -> List[Message]:
         return (
             await Message.find(Message.session_id == PydanticObjectId(session_id))
             .sort(Message.created_at)

@@ -15,7 +15,9 @@ from app.services.auth_service import auth_service
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED
+)
 async def register(body: RegisterRequest):
     """Create a new account and receive auth tokens."""
     try:

@@ -1,6 +1,6 @@
 """Unit tests for the chunker utility."""
 
-import pytest
+
 from app.utils.chunker import chunk_text
 
 

@@ -3,10 +3,10 @@ from pydantic import BaseModel
 
 from app.api.deps import get_admin_user
 from app.models.user import User
+from app.repositories.chat_repo import chat_repo
 from app.repositories.chunk_repo import chunk_repo
 from app.repositories.document_repo import document_repo
 from app.repositories.user_repo import user_repo
-from app.repositories.chat_repo import chat_repo
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 

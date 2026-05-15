@@ -8,7 +8,11 @@ from httpx import AsyncClient
 async def test_register_success(test_client: AsyncClient):
     resp = await test_client.post(
         "/api/v1/auth/register",
-        json={"email": "new@example.com", "password": "Test1234!", "full_name": "New User"},
+        json={
+            "email": "new@example.com",
+            "password": "Test1234!",
+            "full_name": "New User",
+        },
     )
     assert resp.status_code == 201
     data = resp.json()

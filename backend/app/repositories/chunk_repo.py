@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import List
 
 from beanie import PydanticObjectId
 
@@ -39,9 +39,7 @@ class ChunkRepository:
 
     async def get_by_ids(self, chunk_ids: List[str]) -> List[DocumentChunk]:
         oids = [PydanticObjectId(cid) for cid in chunk_ids]
-        return await DocumentChunk.find(
-            {"_id": {"$in": oids}}
-        ).to_list()
+        return await DocumentChunk.find({"_id": {"$in": oids}}).to_list()
 
 
 chunk_repo = ChunkRepository()

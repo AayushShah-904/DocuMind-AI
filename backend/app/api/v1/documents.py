@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Query, status
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Query, UploadFile, status
 
 from app.api.deps import get_current_user
 from app.core.exceptions import http_400, http_404
@@ -28,7 +28,9 @@ def _format(doc) -> DocumentResponse:
     )
 
 
-@router.post("/upload", response_model=DocumentResponse, status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    "/upload", response_model=DocumentResponse, status_code=status.HTTP_202_ACCEPTED
+)
 async def upload_document(
     file: UploadFile = File(...),
     background_tasks: BackgroundTasks = BackgroundTasks(),
@@ -39,10 +41,13 @@ async def upload_document(
     Processing happens in the background — poll /library/{id}/status for progress.
     """
     try:
-        doc = await document_service.upload(file, str(current_user.id), background_tasks)
+        doc = await document_service.upload(
+            file, str(current_user.id), background_tasks
+        )
         return _format(doc)
     except Exception as e:
         import traceback
+
         traceback.print_exc()
         raise http_400(f"{type(e).__name__}: {str(e)}")
 

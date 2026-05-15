@@ -32,9 +32,7 @@ class ValidationError(DocumentumError):
 
 class FileTooLargeError(DocumentumError):
     def __init__(self, max_mb: int):
-        super().__init__(
-            f"File exceeds the {max_mb}MB limit.", code="FILE_TOO_LARGE"
-        )
+        super().__init__(f"File exceeds the {max_mb}MB limit.", code="FILE_TOO_LARGE")
 
 
 class UnsupportedFileTypeError(DocumentumError):
@@ -56,6 +54,7 @@ class RateLimitError(DocumentumError):
 
 
 # ── HTTP exception helpers ────────────────────────────────────────────────────
+
 
 def http_404(detail: str = "Not found") -> HTTPException:
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)

@@ -4,21 +4,21 @@ Uses LangChain + Gemini 2.5 Flash for generation.
 """
 
 import time
-from typing import Any, AsyncGenerator, Dict, List, Optional
+from typing import AsyncGenerator, List, Optional
 
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.schema import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.core.config import settings
 from app.core.logging import get_logger
-from app.repositories.chat_repo import chat_repo
 from app.models.message import MessageRole
+from app.repositories.chat_repo import chat_repo
 from app.services.retrieval_service import retrieval_service
 
 logger = get_logger(__name__)
 
-SYSTEM_PROMPT = """You are DocuMind, an AI assistant that answers questions based on the user's uploaded documents.
+SYSTEM_PROMPT = """You are DocuMind, an AI assistant that answers questions \
+based on the user's uploaded documents.
 
 Your job:
 - Answer questions using ONLY the provided document context below
@@ -98,9 +98,14 @@ class RAGService:
         for i, chunk in enumerate(chunks):
             fname = chunk["metadata"].get("filename", "document")
             context_parts.append(
-                f"[Source {i+1} — {fname}, chunk {chunk['chunk_index']}]\n{chunk['content']}"
+                f"[Source {i+1} — {fname}, chunk {chunk['chunk_index']}]\n"
+                f"{chunk['content']}"
             )
-        context = "\n\n---\n\n".join(context_parts) if context_parts else "No relevant documents found."
+        context = (
+            "\n\n---\n\n".join(context_parts)
+            if context_parts
+            else "No relevant documents found."
+        )
 
         # ── 5. Build conversation history ─────────────────────────────────────
         history = await chat_repo.get_messages(session_id, limit=10)
@@ -118,7 +123,7 @@ class RAGService:
         ]
 
         full_response = ""
-        yield f"data: {{\"session_id\": \"{session_id}\", \"type\": \"start\"}}\n\n"
+        yield f'data: {{"session_id": "{session_id}", "type": "start"}}\n\n'
 
         try:
             async for chunk_msg in self.llm.astream(messages):
@@ -129,7 +134,10 @@ class RAGService:
                     yield f'data: {{"type": "token", "content": "{safe}"}}\n\n'
         except Exception as e:
             logger.error("LLM streaming failed", error=str(e))
-            yield f'data: {{"type": "error", "content": "Generation failed: {str(e)[:100]}"}}\n\n'
+            yield (
+                f"data: {{\"type\": \"error\", \"content\": "
+                f"\"Generation failed: {str(e)[:100]}\"}}\n\n"
+            )
             return
 
         # ── 7. Persist assistant message ──────────────────────────────────────
@@ -162,7 +170,11 @@ class RAGService:
         )
 
         import json
-        yield f'data: {{"type": "done", "sources": {json.dumps(sources)}, "session_id": "{session_id}", "latency_ms": {latency_ms}}}\n\n'
+
+        yield (
+            f'data: {{"type": "done", "sources": {json.dumps(sources)}, '
+            f'"session_id": "{session_id}", "latency_ms": {latency_ms}}}\n\n'
+        )
 
 
 rag_service = RAGService()

@@ -1,7 +1,6 @@
 from typing import Optional
 
 from beanie import PydanticObjectId
-from pydantic import EmailStr
 
 from app.core.logging import get_logger
 from app.models.user import User

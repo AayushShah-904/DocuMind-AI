@@ -2,16 +2,12 @@
 DocuMind AI — FastAPI application entry point.
 """
 
-import time
-import uuid
 from contextlib import asynccontextmanager
-
-import structlog
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.v1 import auth, documents, chat, health, admin
+from app.api.v1 import admin, auth, chat, documents, health
 from app.core.config import settings
 from app.core.logging import get_logger, setup_logging
 from app.db.mongodb import connect_db, disconnect_db

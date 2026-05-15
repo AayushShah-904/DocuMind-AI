@@ -1,4 +1,3 @@
-from typing import List
 
 import motor.motor_asyncio
 from beanie import init_beanie
@@ -16,14 +15,15 @@ async def connect_db() -> None:
     global _client
 
     # Import models here to avoid circular imports
-    from app.models.user import User
-    from app.models.document import Document_
-    from app.models.chunk import DocumentChunk
     from app.models.chat_session import ChatSession
+    from app.models.chunk import DocumentChunk
+    from app.models.document import Document_
     from app.models.message import Message
+    from app.models.user import User
 
     logger.info("Connecting to MongoDB Atlas...")
     import certifi
+
     _client = motor.motor_asyncio.AsyncIOMotorClient(
         settings.MONGODB_URI, tlsCAFile=certifi.where()
     )

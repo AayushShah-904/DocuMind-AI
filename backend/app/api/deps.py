@@ -2,7 +2,7 @@
 FastAPI dependency injection: current user, admin check, rate limiting.
 """
 
-from fastapi import Depends, Header
+from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.core.exceptions import http_401, http_403, http_429

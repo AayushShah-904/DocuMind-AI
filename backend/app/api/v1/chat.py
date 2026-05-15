@@ -1,5 +1,4 @@
-import json
-from typing import List, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
@@ -8,7 +7,12 @@ from app.api.deps import check_rate_limit, get_current_user
 from app.core.exceptions import http_400, http_404
 from app.models.user import User
 from app.repositories.chat_repo import chat_repo
-from app.schemas.chat import AskRequest, MessageResponse, SessionDetailResponse, SessionResponse
+from app.schemas.chat import (
+    AskRequest,
+    MessageResponse,
+    SessionDetailResponse,
+    SessionResponse,
+)
 from app.services.rag_service import rag_service
 
 router = APIRouter(prefix="/conversations", tags=["Chat"])

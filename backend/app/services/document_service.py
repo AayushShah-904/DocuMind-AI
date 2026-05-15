@@ -4,12 +4,15 @@ and stores everything in MongoDB. Processing runs as a FastAPI background task.
 """
 
 import uuid
-from datetime import datetime, timezone
 
 from fastapi import BackgroundTasks, UploadFile
 
 from app.core.config import settings
-from app.core.exceptions import FileTooLargeError, ProcessingError, UnsupportedFileTypeError
+from app.core.exceptions import (
+    FileTooLargeError,
+    ProcessingError,
+    UnsupportedFileTypeError,
+)
 from app.core.logging import get_logger
 from app.models.chunk import DocumentChunk
 from app.models.document import Document_, DocumentStatus, DocumentType
@@ -68,6 +71,7 @@ class DocumentService:
     ) -> None:
         """Background task: parse → clean → chunk → embed → store."""
         import asyncio
+
         try:
             await document_repo.update_status(doc_id, DocumentStatus.PROCESSING)
 

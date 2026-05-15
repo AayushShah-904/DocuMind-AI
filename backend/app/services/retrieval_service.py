@@ -6,7 +6,6 @@ Hybrid retrieval service combining:
 4. Cross-encoder reranking for precision boost
 """
 
-import math
 from typing import Any, Dict, List, Optional
 
 from beanie import PydanticObjectId
@@ -88,9 +87,7 @@ class RetrievalService:
         db = client[settings.MONGODB_DB_NAME]
         collection = db["chunks"]
 
-        pre_filter: Dict[str, Any] = {
-            "user_id": PydanticObjectId(user_id)
-        }
+        pre_filter: Dict[str, Any] = {"user_id": PydanticObjectId(user_id)}
         if document_ids:
             pre_filter["document_id"] = {
                 "$in": [PydanticObjectId(d) for d in document_ids]
@@ -107,11 +104,7 @@ class RetrievalService:
                     "filter": pre_filter,
                 }
             },
-            {
-                "$addFields": {
-                    "score": {"$meta": "vectorSearchScore"}
-                }
-            },
+            {"$addFields": {"score": {"$meta": "vectorSearchScore"}}},
             {
                 "$project": {
                     "content": 1,
@@ -125,15 +118,17 @@ class RetrievalService:
 
         results = []
         async for doc in collection.aggregate(pipeline):
-            results.append({
-                "chunk_id": str(doc["_id"]),
-                "document_id": str(doc["document_id"]),
-                "content": doc["content"],
-                "metadata": doc.get("metadata", {}),
-                "chunk_index": doc.get("chunk_index", 0),
-                "score": doc.get("score", 0.0),
-                "search_type": "semantic",
-            })
+            results.append(
+                {
+                    "chunk_id": str(doc["_id"]),
+                    "document_id": str(doc["document_id"]),
+                    "content": doc["content"],
+                    "metadata": doc.get("metadata", {}),
+                    "chunk_index": doc.get("chunk_index", 0),
+                    "score": doc.get("score", 0.0),
+                    "search_type": "semantic",
+                }
+            )
         return results
 
     async def _numpy_cosine_search(
@@ -168,15 +163,17 @@ class RetrievalService:
         scored.sort(key=lambda x: x[0], reverse=True)
         results = []
         for score, chunk in scored[:limit]:
-            results.append({
-                "chunk_id": str(chunk.id),
-                "document_id": str(chunk.document_id),
-                "content": chunk.content,
-                "metadata": chunk.metadata,
-                "chunk_index": chunk.chunk_index,
-                "score": score,
-                "search_type": "semantic_fallback",
-            })
+            results.append(
+                {
+                    "chunk_id": str(chunk.id),
+                    "document_id": str(chunk.document_id),
+                    "content": chunk.content,
+                    "metadata": chunk.metadata,
+                    "chunk_index": chunk.chunk_index,
+                    "score": score,
+                    "search_type": "semantic_fallback",
+                }
+            )
         return results
 
     async def _keyword_search(
@@ -205,10 +202,14 @@ class RetrievalService:
         # Use $text search if available, else regex
         try:
             text_filter = {**filters, "$text": {"$search": query}}
-            cursor = collection.find(
-                text_filter,
-                {"score": {"$meta": "textScore"}},
-            ).sort([("score", {"$meta": "textScore"})]).limit(limit)
+            cursor = (
+                collection.find(
+                    text_filter,
+                    {"score": {"$meta": "textScore"}},
+                )
+                .sort([("score", {"$meta": "textScore"})])
+                .limit(limit)
+            )
         except Exception:
             # Regex fallback
             pattern = "|".join(keywords[:5])
@@ -217,15 +218,17 @@ class RetrievalService:
 
         results = []
         async for doc in cursor:
-            results.append({
-                "chunk_id": str(doc["_id"]),
-                "document_id": str(doc["document_id"]),
-                "content": doc["content"],
-                "metadata": doc.get("metadata", {}),
-                "chunk_index": doc.get("chunk_index", 0),
-                "score": doc.get("score", 1.0),
-                "search_type": "keyword",
-            })
+            results.append(
+                {
+                    "chunk_id": str(doc["_id"]),
+                    "document_id": str(doc["document_id"]),
+                    "content": doc["content"],
+                    "metadata": doc.get("metadata", {}),
+                    "chunk_index": doc.get("chunk_index", 0),
+                    "score": doc.get("score", 1.0),
+                    "search_type": "keyword",
+                }
+            )
         return results
 
     def _reciprocal_rank_fusion(

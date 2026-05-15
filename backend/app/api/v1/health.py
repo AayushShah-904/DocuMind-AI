@@ -3,8 +3,8 @@ import time
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from app.db.mongodb import get_db_client
 from app.core.config import settings
+from app.db.mongodb import get_db_client
 
 router = APIRouter(tags=["System"])
 

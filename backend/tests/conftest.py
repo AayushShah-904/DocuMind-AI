@@ -4,12 +4,13 @@ Uses mongomock-motor for in-memory MongoDB and fakeredis for Redis.
 """
 
 import asyncio
+
 import pytest
 import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 
-from app.main import app
 from app.db import mongodb
+from app.main import app
 
 
 @pytest.fixture(scope="session")
@@ -28,12 +29,13 @@ async def test_client():
     original_connect = mongodb.connect_db
 
     async def mock_connect():
-        from app.models.user import User
-        from app.models.document import Document_
-        from app.models.chunk import DocumentChunk
-        from app.models.chat_session import ChatSession
-        from app.models.message import Message
         from beanie import init_beanie
+
+        from app.models.chat_session import ChatSession
+        from app.models.chunk import DocumentChunk
+        from app.models.document import Document_
+        from app.models.message import Message
+        from app.models.user import User
 
         client = mongomock_motor.AsyncMongoMockClient()
         db = client["test_documind"]
@@ -58,7 +60,11 @@ async def auth_headers(test_client: AsyncClient):
     """Register a test user and return auth headers."""
     resp = await test_client.post(
         "/api/v1/auth/register",
-        json={"email": "test@example.com", "password": "Test1234!", "full_name": "Test User"},
+        json={
+            "email": "test@example.com",
+            "password": "Test1234!",
+            "full_name": "Test User",
+        },
     )
     token = resp.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}

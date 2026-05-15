@@ -36,9 +36,7 @@ class DocumentRepository:
         self, user_id: str, skip: int = 0, limit: int = 20
     ) -> List[Document_]:
         return (
-            await Document_.find(
-                {"user_id": PydanticObjectId(user_id)}
-            )
+            await Document_.find({"user_id": PydanticObjectId(user_id)})
             .sort("-created_at")
             .skip(skip)
             .limit(limit)
@@ -46,9 +44,7 @@ class DocumentRepository:
         )
 
     async def count_by_user(self, user_id: str) -> int:
-        return await Document_.find(
-            {"user_id": PydanticObjectId(user_id)}
-        ).count()
+        return await Document_.find({"user_id": PydanticObjectId(user_id)}).count()
 
     async def update_status(
         self,
